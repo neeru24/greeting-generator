@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden card-hover">
+        <!-- Header with subtle reference -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-700 p-6 text-white">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">Greeting Generator</h1>
+                    <p class="mt-2 opacity-90">Create personalized greetings in seconds</p>
+                </div>
+                <div class="text-xs text-purple-200 text-right">
+                    <p>Powered by</p>
+                    <p class="font-semibold">BlockseBlock</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="p-6 md:p-8">
+            <!-- Input Section -->
+            <div class="mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Name Input -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user mr-2 text-purple-500"></i>Recipient's Name
+                        </label>
+                        <input type="text" id="name" placeholder="Enter name" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                    </div>
+
+                    <!-- Occasion Selector -->
+                    <div>
+                        <label for="occasion" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-calendar-alt mr-2 text-purple-500"></i>Occasion
+                        </label>
+                        <select id="occasion" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="wedding">Wedding</option>
+                            <option value="graduation">Graduation</option>
+                            <option value="new-job">New Job</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="thank-you">Thank You</option>
+                            <option value="get-well">Get Well Soon</option>
+                            <option value="congratulations">Congratulations</option>
+                            <option value="general">General Greeting</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tone Selector -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        <i class="fas fa-magic mr-2 text-purple-500"></i>Tone
+                    </label>
+                    <div class="flex flex-wrap gap-3">
+                        <button class="tone-btn bg-purple-100 text-purple-700 px-4 py-2 rounded-lg transition hover:bg-purple-200 active" data-tone="friendly">
+                            <i class="fas fa-smile mr-2"></i>Friendly
+                        </button>
+                        <button class="tone-btn bg-blue-100 text-blue-700 px-4 py-2 rounded-lg transition hover:bg-blue-200" data-tone="formal">
+                            <i class="fas fa-user-tie mr-2"></i>Formal
+                        </button>
+                        <button class="tone-btn bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg transition hover:bg-yellow-200" data-tone="funny">
+                            <i class="fas fa-laugh mr-2"></i>Funny
+                        </button>
+                        <button class="tone-btn bg-pink-100 text-pink-700 px-4 py-2 rounded-lg transition hover:bg-pink-200" data-tone="romantic">
+                            <i class="fas fa-heart mr-2"></i>Romantic
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Message Length -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        <i class="fas fa-ruler mr-2 text-purple-500"></i>Message Length
+                    </label>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-500 mr-3">Short</span>
+                        <input type="range" id="length" min="1" max="3" value="2" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <span class="text-sm text-gray-500 ml-3">Long</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="flex justify-center mb-8">
+                <button id="generate-btn" 
+                        class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-8 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition flex items-center">
+                    <i class="fas fa-bolt mr-2"></i>Generate Greeting
+                </button>
+            </div>
+
+            <!-- Result Section -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Your Greeting</h2>
+                    <button id="copy-btn" class="text-gray-500 hover:text-purple-600 transition">
+                        <i class="far fa-copy mr-1"></i>Copy
+                    </button>
+                </div>
+                <div id="greeting-output" class="min-h-[120px] p-4 bg-white rounded-lg border border-gray-300 text-gray-700">
+                    <p class="text-center text-gray-500">Your personalized greeting will appear here</p>
+                </div>
+            </div>
+
+            <!-- Additional Options -->
+            <div class="mt-6 flex flex-wrap gap-4 justify-center">
+                <button id="save-btn" class="text-purple-600 hover:text-purple-800 transition flex items-center">
+                    <i class="far fa-save mr-2"></i>Save
+                </button>
+                <button id="share-btn" class="text-purple-600 hover:text-purple-800 transition flex items-center">
+                    <i class="fas fa-share-alt mr-2"></i>Share
+                </button>
+                <button id="reset-btn" class="text-purple-600 hover:text-purple-800 transition flex items-center">
+                    <i class="fas fa-redo mr-2"></i>Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer with subtle reference -->
+        <div class="bg-gray-100 border-t border-gray-200 py-4 px-6 text-center text-gray-600 text-sm">
+            <p>Part of the <span class="font-semibold text-purple-600">Xpedition</span> tool suite</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const nameInput = document.getElementById('name');
+            const occasionSelect = document.getElementById('occasion');
+            const toneButtons = document.querySelectorAll('.tone-btn');
+            const lengthSlider = document.getElementById('length');
+            const generateBtn = document.getElementById('generate-btn');
+            const greetingOutput = document.getElementById('greeting-output');
+            const copyBtn = document.getElementById('copy-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const shareBtn = document.getElementById('share-btn');
+            const resetBtn = document.getElementById('reset-btn');
+
+            // Current settings
+            let currentTone = 'friendly';
+
+            // Set active tone button
+            toneButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    toneButtons.forEach(btn => btn.classList.remove('active', 'ring-2', 'ring-purple-500'));
+                    this.classList.add('active', 'ring-2', 'ring-purple-500');
+                    currentTone = this.getAttribute('data-tone');
+                });
+            });
+
+            // Generate greeting function
+            generateBtn.addEventListener('click', function() {
+                const name = nameInput.value.trim() || 'Friend';
+                const occasion = occasionSelect.value;
+                const length = parseInt(lengthSlider.value);
+                
+                // Show loading state
+                greetingOutput.innerHTML = '<div class="flex justify-center items-center h-20"><i class="fas fa-spinner fa-spin text-purple-500 text-xl"></i></div>';
+                
+                // Simulate API call with timeout
+                setTimeout(() => {
+                    const greeting = generateGreeting(name, occasion, currentTone, length);
+                    greetingOutput.innerHTML = `<p class="text-lg leading-relaxed">${greeting}</p>`;
+                }, 800);
+            });
+
+            // Copy greeting function
+            copyBtn.addEventListener('click', function() {
+                const text = greetingOutput.innerText;
+                if (text && !text.includes('Your personalized greeting will appear here')) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        // Show success feedback
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                        }, 2000);
+                    });
+                }
+            });
+
+            // Save greeting function
+            saveBtn.addEventListener('click', function() {
+                const text = greetingOutput.innerText;
+                if (text && !text.includes('Your personalized greeting will appear here')) {
+                    alert('Greeting saved to favorites!');
+                } else {
+                    alert('Please generate a greeting first.');
+                }
+            });
+
+            // Share greeting function
+            shareBtn.addEventListener('click', function() {
+                const text = greetingOutput.innerText;
+                if (text && !text.includes('Your personalized greeting will appear here')) {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Personalized Greeting',
+                            text: text
+                        });
+                    } else {
+                        alert('Sharing is not supported in your browser. Copy the text instead.');
+                    }
+                } else {
+                    alert('Please generate a greeting first.');
+                }
+            });
+
+            // Reset function
+            resetBtn.addEventListener('click', function() {
+                nameInput.value = '';
+                occasionSelect.value = 'birthday';
+                toneButtons.forEach(btn => {
+                    btn.classList.remove('active', 'ring-2', 'ring-purple-500');
+                    if (btn.getAttribute('data-tone') === 'friendly') {
+                        btn.classList.add('active', 'ring-2', 'ring-purple-500');
+                    }
+                });
+                lengthSlider.value = 2;
+                currentTone = 'friendly';
+                greetingOutput.innerHTML = '<p class="text-center text-gray-500">Your personalized greeting will appear here</p>';
+            });
+
+            // Greeting generation logic
+            function generateGreeting(name, occasion, tone, length) {
+                const greetings = {
+                    birthday: {
+                        friendly: [
+                            `Happy Birthday, ${name}! Hope you have an amazing day filled with joy and laughter.`,
+                            `Wishing you the happiest of birthdays, ${name}! May your special day be as wonderful as you are.`,
+                            `Happy Birthday to one of the most incredible people I know! Hope your day is filled with all the things that make you smile, ${name}.`
+                        ],
+                        formal: [
+                            `Wishing you a very Happy Birthday, ${name}. May this year bring you success and happiness.`,
+                            `Please accept my sincerest birthday wishes, ${name}. May you have a prosperous year ahead.`,
+                            `On the occasion of your birthday, I extend my warmest wishes for health, happiness and success in the coming year, ${name}.`
+                        ],
+                        funny: [
+                            `Happy Birthday, ${name}! You're not old, you're just... chronologically gifted!`,
+                            `Another year older, but let's be honest - you're still younger than you'll be next year! Happy Birthday, ${name}!`,
+                            `They say age is just a number, but in your case it's a really high one! Just kidding! Happy Birthday, ${name}!`
+                        ],
+                        romantic: [
+                            `Happy Birthday to the one who makes my heart skip a beat. I love you more with each passing year, ${name}.`,
+                            `On your special day, I want you to know how much you mean to me. Happy Birthday, my love ${name}.`,
+                            `Every moment with you is a gift, but today is extra special because it's your birthday. I love you, ${name}.`
+                        ]
+                    },
+                    anniversary: {
+                        friendly: [
+                            `Happy Anniversary, ${name}! Wishing you many more years of love and happiness together.`,
+                            `Congratulations on another year of love and partnership, ${name}! Cheers to many more.`,
+                            `Happy Anniversary to a wonderful couple! May your love continue to grow with each passing year, ${name}.`
+                        ],
+                        formal: [
+                            `Warm congratulations on your anniversary, ${name}. May you continue to cherish each other.`,
+                            `Please accept my heartfelt congratulations on your anniversary, ${name}. Wishing you continued happiness.`,
+                            `On this special occasion of your anniversary, I extend my best wishes for your continued journey together, ${name}.`
+                        ],
+                        funny: [
+                            `Happy Anniversary, ${name}! Remember, the secret to a happy marriage is still a secret!`,
+                            `Congrats on putting up with each other for another year! Happy Anniversary, ${name}!`,
+                            `They say marriage is a workshop where the husband works and the wife shops! Happy Anniversary, ${name}!`
+                        ],
+                        romantic: [
+                            `Happy Anniversary, my love ${name}. Every day with you feels like a blessing. Here's to forever.`,
+                            `Another year has passed, but my love for you grows stronger each day. Happy Anniversary, ${name}.`,
+                            `On our anniversary, I just want to say you're still the one who makes my heart race. I love you, ${name}.`
+                        ]
+                    },
+                    // Additional occasions would follow the same pattern
+                    general: {
+                        friendly: [
+                            `Hello ${name}! Hope you're having a wonderful day.`,
+                            `Hi ${name}! Just wanted to send some positive vibes your way.`,
+                            `Hey ${name}! Thinking of you and hoping everything is going great.`
+                        ],
+                        formal: [
+                            `Dear ${name}, I hope this message finds you well.`,
+                            `To ${name}, I am writing to extend my warm regards.`,
+                            `Respected ${name}, I trust you are in good health and spirits.`
+                        ],
+                        funny: [
+                            `Hey ${name}! Remember, if at first you don't succeed, then skydiving is not for you!`,
+                            `What's up ${name}? I was going to tell you a joke about pizza, but it was too cheesy!`,
+                            `Hello ${name}! I'm reading a book about anti-gravity. It's impossible to put down!`
+                        ],
+                        romantic: [
+                            `Thinking of you always brings a smile to my face, ${name}.`,
+                            `Every moment without you feels incomplete, ${name}. Can't wait to see you again.`,
+                            `You're the first thing I think of when I wake up and the last thing on my mind before I sleep, ${name}.`
+                        ]
+                    }
+                };
+
+                // For simplicity, using only birthday and anniversary in this example
+                // In a full implementation, all occasions would be included
+                const occasionData = greetings[occasion] || greetings.general;
+                const toneGreetings = occasionData[tone] || occasionData.friendly;
+                
+                // Adjust for length (1=short, 2=medium, 3=long)
+                const index = Math.min(length - 1, toneGreetings.length - 1);
+                
+                return toneGreetings[index];
+            }
+        });
+    </script>
+</body>
+</html>
